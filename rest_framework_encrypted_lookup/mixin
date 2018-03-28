@@ -1,0 +1,9 @@
+class EncryptedRetrieveMixin(object):
+
+    def get_object(self):
+        serializer = self.get_serializer()
+        model = serializer.Meta.model
+        try:
+            return model.objects.get(pk=serializer.get_cipher().decode(self.kwargs[self.lookup_field]))
+        except (Error, model.DoesNotExist):
+            raise Http404
